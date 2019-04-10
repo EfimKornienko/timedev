@@ -47,7 +47,6 @@ export default {
             new Task(
               t.title,
               t.description,
-              t.whatWatch,
               t.time,
               t.tags,
               t.completed,
@@ -75,7 +74,6 @@ export default {
         const newTask = new Task(
           payload.title,
           payload.description,
-          payload.whatWatch,
           payload.time,
           payload.tags,
           payload.completed,

@@ -70,15 +70,15 @@
               span.time-title Hours
               input.time-input(
                 type="number"
-                v-model="Hours"
+                v-model="hours"
               )
               span.time-title Minutes
               input.time-input(
                 type="number"
-                v-model="Minutes"
+                v-model="minutes"
               )
               // Show time
-              p {{time}}
+              p {{spentTime}}
           // SUBMIT
           .button-list
             button.button.button--round.button-primary(
@@ -96,10 +96,9 @@ export default {
       submitStatus: null,
       taskTitle: '',
       taskDescription: '',
-      time: '',
       // Total Time
-      Hours: 1,
-      Minutes: 10,
+      hours: 1,
+      minutes: 10,
       // Tags
       tagTitle: '',
       tagMenuShow: false,
@@ -155,14 +154,16 @@ export default {
       if (this.$v.$invalid) {
         console.log('ERROR')
         this.submitStatus = 'ERROR'
+        console.log('Dolbayob')
       // Valid
       } else {
+         let time = this.spentTime
+      }
         // Task
         const task = {
           title: this.taskTitle,
           description: this.taskDescription,
-          whatWatch: this.whatWatch,
-          time,
+          time: this.time,
           tags: this.tagsUsed,
           completed: false,
           editing: false
@@ -173,6 +174,7 @@ export default {
           })
           .catch(err => {
             this.submitStatus = err.message
+            console.log('Ebalo')
           })
         // Reset
         this.taskTitle = ''
@@ -187,7 +189,6 @@ export default {
         for (let i = 0; i < this.tags.length; i++) {
           this.tags[i].use = false
         }
-      }
     },
     // COMMON Total Time
     getHoursAndMinutes (minutes) {
@@ -201,9 +202,9 @@ export default {
     tags () {
       return this.$store.getters.tags
     },
-    // FILM Total Time
-    time () {
-      let min = (this.Hours * 60) + (this.Minutes * 1)
+    // Total Time
+    spentTime () {
+      let min = (this.hours * 60) + (this.minutes * 1)
       return this.getHoursAndMinutes(min)
     }
   }

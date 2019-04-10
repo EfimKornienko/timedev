@@ -3,7 +3,6 @@ export default class Task {
   constructor (
     title,
     description,
-    whatWatch,
     time,
     tags,
     completed,
@@ -13,7 +12,6 @@ export default class Task {
   ) {
     this.title = title
     this.description = description
-    this.whatWatch = whatWatch
     this.time = time
     this.tags = tags
     this.completed = completed

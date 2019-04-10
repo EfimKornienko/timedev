@@ -30,8 +30,7 @@
                   .task-item__main-info
                     span.ui-label(
                       :class="[{ 'ui-label--primary': !task.completed }, { 'ui-label--light': task.completed  }]"
-                    ) {{ task.whatWatch }}
-                    span Total Time: {{ task.time }}
+                    ) Total Time: {{ task.time }}
                   span.button-close(
                     @click="deleteTask(task.id)"
                   )

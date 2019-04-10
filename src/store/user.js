@@ -48,6 +48,7 @@ export default {
     loggedUser ({commit}, payload) {
       // Send mutation new uid used helped Class
       commit('setUser', new User(payload.uid))
+      console.log('zaebis')
     },
     // Logout
     logoutUser ({commit}) {

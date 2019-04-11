@@ -94,7 +94,7 @@ export default {
   data () {
     return {
       submitStatus: null,
-      taskTitle: '',
+      taskTitle: 'Ebalo',
       taskDescription: '',
       // Total Time
       hours: 1,
@@ -105,7 +105,6 @@ export default {
       tagsUsed: []
     }
   },
-  state: [],
   // Vuelodate
   validations: {
     taskTitle: {
@@ -154,16 +153,15 @@ export default {
       if (this.$v.$invalid) {
         console.log('ERROR')
         this.submitStatus = 'ERROR'
-        console.log('Dolbayob')
       // Valid
       } else {
-         let time = this.spentTime
-      }
+        // Time (What Watch)
+        let time = this.spentTime
         // Task
         const task = {
           title: this.taskTitle,
           description: this.taskDescription,
-          time: this.time,
+          time,
           tags: this.tagsUsed,
           completed: false,
           editing: false
@@ -174,7 +172,6 @@ export default {
           })
           .catch(err => {
             this.submitStatus = err.message
-            console.log('Ebalo')
           })
         // Reset
         this.taskTitle = ''
@@ -189,6 +186,7 @@ export default {
         for (let i = 0; i < this.tags.length; i++) {
           this.tags[i].use = false
         }
+      }
     },
     // COMMON Total Time
     getHoursAndMinutes (minutes) {

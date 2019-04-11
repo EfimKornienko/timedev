@@ -1,5 +1,4 @@
 import firebase from 'firebase/app'
-
 import Tag from './tag_help'
 
 export default {
@@ -45,6 +44,7 @@ export default {
       } catch (error) {
         commit('setLoading', false)
         commit('setError', error.message)
+        console.log('Я Хуею')
         throw error
       }
     },

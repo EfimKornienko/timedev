@@ -66,6 +66,7 @@ export default {
         throw error
       }
     },
+    // Create new Task
     async newTask ({commit, getters}, payload) {
       commit('clearError')
       commit('setLoading', true)
@@ -93,6 +94,7 @@ export default {
       } catch (error) {
         commit('setLoading', false)
         commit('setError', error.message)
+        console.log('PIZDEC')
         throw error
       }
     },

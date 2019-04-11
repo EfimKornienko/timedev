@@ -28,21 +28,18 @@ new Vue({
   template: '<App/>',
   created () {
     let config = {
-      apiKey: 'AIzaSyAFNBZqlo1Azk0YDdAMiz0gObNanIQRfoI',
-      authDomain: 'filmlibrary-vue.firebaseapp.com',
-      databaseURL: 'https://timedev-6e6c0.firebaseio.com',
-      projectId: 'filmlibrary-vue',
-      storageBucket: '',
-      messagingSenderId: '37744227930'
     }
     firebase.initializeApp(config)
 
+    // Auth Check
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         // Check Logged
         this.$store.dispatch('loggedUser', user)
         // Loading All Tasks
         this.$store.dispatch('loadTasks')
+        // Loading All Tags
+        this.$store.dispatch('loadTags')
       }
     })
   }

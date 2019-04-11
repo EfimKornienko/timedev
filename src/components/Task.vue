@@ -3,7 +3,7 @@
     section
       .container
         .task-list__header
-          h1.ui-title-1 Library
+          h1.ui-title-1 History
 
           // Filter
           .buttons-list
@@ -21,16 +21,14 @@
         .task-list
           transition-group(name="taskList")
             .task-item(
-              v-for="task in tasksFilter"
+              v-for="task in tasksFilter.reverse()"
               :key="task.id"
               :class="{ completed: task.completed }"
             )
-              .ui-card.ui-card--shadow
+              .ui-card
                 .task-item__info
                   .task-item__main-info
-                    span.ui-label(
-                      :class="[{ 'ui-label--primary': !task.completed }, { 'ui-label--light': task.completed  }]"
-                    ) Total Time: {{ task.time }}
+                    span.ui-label Total Time: {{ task.time }}
                   span.button-close(
                     @click="deleteTask(task.id)"
                   )
@@ -44,7 +42,7 @@
                       )
                     span.ui-title-2 {{ task.title }}
                   .task-item__body
-                    p.ui-text-regular {{ task.description }}
+                    p.ui-text {{ task.description }}
                   .task-item__foter
 
                     // Tags load
@@ -61,12 +59,12 @@
                         .button.button--round.button-default(
                           @click="taskEdit(task.id, task.title, task.description)"
                         ) Edit
-                        .button.button--round(
+                        .button.button--round.button--round-done(
                           @click="taskCompleted(task.id, task.completed)"
                           :class="[{ 'button-primary': !task.completed }, { 'button-light': task.completed  }]"
                         )
                           span(v-if="task.completed") Return
-                          span(v-else) Done
+                          span.done(v-else) Done
 
     // Edit popup
     .ui-messageBox__wrapper(
@@ -179,6 +177,9 @@ export default {
 //
 // Header buttons list
 //
+.ui-label
+  background-color  black 
+  color #fff
 .task-list__header
   display flex
   justify-content space-between
@@ -192,13 +193,13 @@ export default {
 .task-item
   margin-bottom 20px
   .ui-checkbox:checked:before
-    border-color #909399
+    border-color black
   &.completed
     .ui-title-2,
     .ui-text-regular,
     .ui-tag
       text-decoration line-through
-      color #909399
+      color black
   &:last-child
     margin-bottom 0
 .ui-tag__wrapper
@@ -244,4 +245,13 @@ export default {
     display flex
   .button-light
     margin-right 8px
+
+.ui-card, .ui-tag
+ border-color black
+.ui-text
+  color black
+  font-size 20px
+.button--round-done
+  background-color black
+
 </style>

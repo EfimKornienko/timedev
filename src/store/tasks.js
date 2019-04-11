@@ -58,7 +58,7 @@ export default {
         })
         // Send mutation
         commit('loadTasks', tasksArray)
-
+        console.log(tasksArray)
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)

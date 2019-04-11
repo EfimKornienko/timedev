@@ -28,6 +28,12 @@ new Vue({
   template: '<App/>',
   created () {
     let config = {
+      apiKey: 'AIzaSyBoF3ydX4grnUnOvBQKjQpLTrnMC8T2QYA',
+      authDomain: 'filmlibrary-vue.firebaseapp.com',
+      databaseURL: 'https://filmlibrary-vue.firebaseio.com',
+      projectId: 'filmlibrary-vue',
+      storageBucket: '',
+      messagingSenderId: '37744227930'
     }
     firebase.initializeApp(config)
 

@@ -19,7 +19,6 @@
             textarea(
               type="text"
               v-model="taskDescription"
-              @keyup.enter="newTask"
             )
           // TAG LIST
           // Add New Tag Button
@@ -50,11 +49,15 @@
 
           // Show All Tags
           .tag-list
+            transition-group(
+              enter-active-class="animated fadeInRight"
+              leave-active-class="animated fadeOutDown"
+            )
               .ui-tag__wrapper(
                 v-for="tag in tags"
                 :key="tag.id"
               )
-                .ui-tag(
+                .button.ui-tag(
                   @click="addTagUsed(tag)"
                   :class="{used: tag.use}"
                 )
@@ -67,21 +70,21 @@
           .total-time
             // Must Time
             .total-time
-              span.time-title Hours
-              input.time-input(
-                type="number"
-                v-model="hours"
-              )
               span.time-title Minutes
               input.time-input(
                 type="number"
                 v-model="minutes"
               )
+              span.time-title Hours
+              input.time-input(
+                type="number"
+                v-model="hours"
+              )
               // Show time
               p {{spentTime}}
           // SUBMIT
           .button-list
-            button.button.button--round.button-primary(
+            button.button.button--round(
               type="submit"
               :disabled="submitStatus === 'PENDING'"
             ) Send
@@ -94,10 +97,10 @@ export default {
   data () {
     return {
       submitStatus: null,
-      taskTitle: 'Ebalo',
+      taskTitle: '',
       taskDescription: '',
       // Total Time
-      hours: 1,
+      hours: 0,
       minutes: 10,
       // Tags
       tagTitle: '',
@@ -213,6 +216,8 @@ export default {
 //
 // Options
 //
+input,textarea,span
+  border-color black
 .option-list
   display flex
   align-items center
@@ -248,8 +253,10 @@ export default {
   &:last-child
     margin-right 0
 .ui-tag
+  .tag-title 
+    cursor pointer
   &.used
-    background-color: #444ce0
+    background-color: black
     color #fff
     .button-close
       &:before,
@@ -282,7 +289,12 @@ export default {
     margin-right 10px
 .button-list
   display flex
-  justify-content flex-end
+  justify-content flex-end  
+  .button--round
+    background-color  black
+.button-default
+  background-color black 
+  color white
 //
 // Validate
 //
@@ -298,4 +310,8 @@ export default {
 input
   &.error
     border-color #fc5c65
+.ui-card, .ui-tag
+  border-color black
+.tag-title
+  color black
 </style>

@@ -4,6 +4,7 @@ export default class Task {
     title,
     description,
     time,
+    date,
     tags,
     completed,
     editing,
@@ -13,6 +14,7 @@ export default class Task {
     this.title = title
     this.description = description
     this.time = time
+    this.date = date
     this.tags = tags
     this.completed = completed
     this.editing = editing

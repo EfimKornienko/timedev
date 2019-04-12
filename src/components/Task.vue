@@ -53,7 +53,7 @@
                       )
                         .ui-tag
                           span.tag-title {{ tag.title }}
-
+                    span {{task.date}}
                       // Buttons
                       .buttons-list
                         .button.button--round.button-default(
@@ -119,7 +119,7 @@ export default {
       })
         .then(() => {
           console.log(completed)
-          // this.$store.dispatch('loadTasks')
+        //  this.$store.dispatch('loadTasks')
         })
     },
     // Edit

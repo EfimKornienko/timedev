@@ -48,6 +48,7 @@ export default {
               t.title,
               t.description,
               t.time,
+              t.date,
               t.tags,
               t.completed,
               t.editing,
@@ -57,8 +58,8 @@ export default {
           )
         })
         // Send mutation
-        commit('loadTasks', tasksArray.reverse())
-        console.log(tasksArray)
+        commit('loadTasks', tasksArray)
+
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)
@@ -76,6 +77,7 @@ export default {
           payload.title,
           payload.description,
           payload.time,
+          payload.date,
           payload.tags,
           payload.completed,
           payload.editing,
@@ -89,7 +91,6 @@ export default {
           ...newTask,
           id: task.key
         })
-
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)

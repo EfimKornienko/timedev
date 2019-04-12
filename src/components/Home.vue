@@ -162,11 +162,13 @@ export default {
       } else {
         // Time (What Watch)
         let time = this.spentTime
+        let date = this.nowTime
         // Task
         const task = {
           title: this.taskTitle,
           description: this.taskDescription,
           time,
+          date,
           tags: this.tagsUsed,
           completed: false,
           editing: false
@@ -184,6 +186,7 @@ export default {
         // Reset $v (validate)
         this.$v.$reset()
         // Reset for Tags
+        this.date=''
         this.tagMenuShow = false
         this.tagsUsed = []
         this.tagTitle = ''
@@ -212,7 +215,15 @@ export default {
     },
     nowTime () {
       let date = new Date();
-      return date.toTimeString()
+      let options = {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          weekday: 'long',
+          hour: 'numeric',
+          minute: 'numeric'
+        };
+      return date.toLocaleString(options)
     }
   }
 }

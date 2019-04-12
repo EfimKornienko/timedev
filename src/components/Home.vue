@@ -18,6 +18,7 @@
           .form-item
             textarea(
               type="text"
+              placeholder='Write a short description'
               v-model="taskDescription"
             )
           // TAG LIST
@@ -82,6 +83,7 @@
               )
               // Show time
               p {{spentTime}}
+              p {{nowTime}}
           // SUBMIT
           .button-list
             button.button.button--round(
@@ -207,13 +209,16 @@ export default {
     spentTime () {
       let min = (this.hours * 60) + (this.minutes * 1)
       return this.getHoursAndMinutes(min)
+    },
+    nowTime () {
+      let date = new Date();
+      return date.toTimeString()
     }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-//
 // Options
 //
 input,textarea,span
@@ -255,9 +260,12 @@ input,textarea,span
 .ui-tag
   .tag-title 
     cursor pointer
+    color black 
   &.used
     background-color: black
-    color #fff
+    color #ffffff
+    .tag-title
+        color #fff
     .button-close
       &:before,
       &:after
@@ -312,6 +320,4 @@ input
     border-color #fc5c65
 .ui-card, .ui-tag
   border-color black
-.tag-title
-  color black
 </style>

@@ -12,7 +12,7 @@ export default {
       state.tasks = payload
     },
     newTask (state, payload) {
-      state.tasks.push(payload)
+      state.tasks.unshift(payload)
     },
     editTask (state, {id, title, description}) {
       const task = state.tasks.find(t => {
@@ -57,7 +57,7 @@ export default {
           )
         })
         // Send mutation
-        commit('loadTasks', tasksArray)
+        commit('loadTasks', tasksArray.reverse())
         console.log(tasksArray)
         commit('setLoading', false)
       } catch (error) {

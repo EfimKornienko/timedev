@@ -83,7 +83,7 @@
               )
               // Show time
               p {{spentTime}}
-              p {{nowTime}}
+              p {{nowTime()}}
           // SUBMIT
           .button-list
             button.button.button--round(
@@ -162,7 +162,7 @@ export default {
       } else {
         // Time (What Watch)
         let time = this.spentTime
-        let date = this.nowTime
+        let date = this.nowTime()
         // Task
         const task = {
           title: this.taskTitle,
@@ -201,17 +201,6 @@ export default {
       let hours = Math.trunc(minutes / 60)
       let min = minutes % 60
       return hours + ' Hours ' + min + ' Minutes'
-    }
-  },
-  computed: {
-    // Return all Tags
-    tags () {
-      return this.$store.getters.tags
-    },
-    // Total Time
-    spentTime () {
-      let min = (this.hours * 60) + (this.minutes * 1)
-      return this.getHoursAndMinutes(min)
     },
     nowTime () {
       let date = new Date();
@@ -224,6 +213,17 @@ export default {
           minute: 'numeric'
         };
       return date.toLocaleString(options)
+    }
+  },
+  computed: {
+    // Return all Tags
+    tags () {
+      return this.$store.getters.tags
+    },
+    // Total Time
+    spentTime () {
+      let min = (this.hours * 60) + (this.minutes * 1)
+      return this.getHoursAndMinutes(min)
     }
   }
 }

@@ -59,7 +59,7 @@ export default {
         })
         // Send mutation
         commit('loadTasks', tasksArray)
-
+        console.log(tasksArray)
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)
@@ -142,7 +142,7 @@ export default {
       commit('setLoading', true)
       try {
         await firebase.database().ref('tasks').child(id).remove()
-
+        console.log('NoRm')
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)

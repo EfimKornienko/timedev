@@ -19,54 +19,62 @@
 
         // Task load
         .task-list
-          transition-group(name="taskList")
             .task-item(
               v-for="task in tasksFilter"
               :key="task.id"
               :class="{ completed: task.completed }"
             )
-              .ui-card(
-                @click="taskMenuShow = !taskMenuShow"
-              )
-                .task-item__info
-                  .task-item__main-info
-                    span.ui-label Total Time: {{ task.time }}
-                  span.button-close(
-                    @click="deleteTask(task.id)"
+              .ui
+                .ui-tag
+                  span.span.ui-title-2 {{ task.title }}
+                  span.ui-label Total Time: {{ task.time }}
+                  span {{task.date}}
+                  .button(
+                    :class="{ active: !taskMenuShow }"
+                    @click="taskShow"
                   )
-                .task-item__content
-                  .task-item__header
-                    .ui-checkbox-wrapper
-                      input.ui-checkbox(
-                        type="checkbox"
-                        v-model="task.completed"
-                        @click="taskCompleted(task.id, task.completed)"
-                      )
-                    span.ui-title-2 {{ task.title }}
-                  .task-item__body
-                    p.ui-text {{ task.description }}
-                  .task-item__foter
-
-                    // Tags load
-                    .tag-list
-                      .ui-tag__wrapper(
-                        v-for="tag in task.tags"
-                        :key="tag.title"
-                      )
-                        .ui-tag
-                          span.tag-title {{ tag.title }}
-                    span {{task.date}}
-                      // Buttons
-                      .buttons-list
-                        .button.button--round.button-default(
-                          @click="taskEdit(task.id, task.title, task.description)"
-                        ) Edit
-                        .button.button--round.button--round-done(
+                .ui-card(
+                  v-if='taskMenuShow'
+                )
+                  .task-item__info
+                    .task-item__main-info
+                      span.ui-label Total Time: {{ task.time }}
+                    span.button-close(
+                      @click="deleteTask(task.id)"
+                    )
+                  .task-item__content
+                    .task-item__header
+                      .ui-checkbox-wrapper
+                        input.ui-checkbox(
+                          type="checkbox"
+                          v-model="task.completed"
                           @click="taskCompleted(task.id, task.completed)"
-                          :class="[{ 'button-primary': !task.completed }, { 'button-light': task.completed  }]"
                         )
-                          span(v-if="task.completed") Return
-                          span.done(v-else) Done
+                      span.ui-title-2 {{ task.title }}
+                    .task-item__body
+                      p.ui-text {{ task.description }}
+                    .task-item__foter
+
+                      // Tags load
+                      .tag-list
+                        .ui-tag__wrapper(
+                          v-for="tag in task.tags"
+                          :key="tag.title"
+                        )
+                          .ui-tag
+                            span.tag-title {{ tag.title }}
+                      span {{task.date}}
+                        // Buttons
+                        .buttons-list
+                          .button.button--round.button-default(
+                            @click="taskEdit(task.id, task.title, task.description)"
+                          ) Edit
+                          .button.button--round.button--round-done(
+                            @click="taskCompleted(task.id, task.completed)"
+                            :class="[{ 'button-primary': !task.completed }, { 'button-light': task.completed  }]"
+                          )
+                            span(v-if="task.completed") Return
+                            span.done(v-else) Done
 
     // Edit popup
     .ui-messageBox__wrapper(
@@ -158,7 +166,10 @@ export default {
           console.log('task deleted')
           this.$store.dispatch('loadTasks')
         })
-    }
+    },
+    taskShow () {
+      this.taskMenuShow = !this.taskMenuShow
+    },
   },
   computed: {
     // Filter buttons

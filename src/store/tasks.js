@@ -9,7 +9,7 @@ export default {
   },
   mutations: {
     loadTasks (state, payload) {
-      state.tasks = payload
+      state.tasks = payload.reverse()
     },
     newTask (state, payload) {
       state.tasks.unshift(payload)

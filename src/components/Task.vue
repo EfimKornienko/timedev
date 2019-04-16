@@ -17,7 +17,7 @@
               @click="filter = 'all'"
             ) All
 
-        // Tasl load
+        // Task load
         .task-list
           transition-group(name="taskList")
             .task-item(
@@ -25,7 +25,9 @@
               :key="task.id"
               :class="{ completed: task.completed }"
             )
-              .ui-card
+              .ui-card(
+                @click="taskMenuShow = !taskMenuShow"
+              )
                 .task-item__info
                   .task-item__main-info
                     span.ui-label Total Time: {{ task.time }}
@@ -106,7 +108,8 @@ export default {
       editingPopup: false,
       titleEditing: '',
       desrEditing: '',
-      taskId: null
+      taskId: null,
+      taskMenuShow: false
     }
   },
   methods: {

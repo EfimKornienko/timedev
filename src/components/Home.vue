@@ -212,7 +212,7 @@ export default {
           hour: 'numeric',
           minute: 'numeric'
         };
-      return date.toLocaleString(options)
+      return date
     }
   },
   computed: {

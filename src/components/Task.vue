@@ -24,57 +24,49 @@
               :key="task.id"
               :class="{ completed: task.completed }"
             )
-              .ui
-                .ui-tag
-                  span.span.ui-title-2 {{ task.title }}
-                  span.ui-label Total Time: {{ task.time }}
-                  span {{task.date}}
-                  .button(
-                    :class="{ active: !taskMenuShow }"
-                    @click="taskShow"
+              .ui-card            
+                .task-item__info
+                  .task-item__main-info
+                    span.ui-label Total Time: {{ task.time }}
+                  span.button-close(
+                    @click="deleteTask(task.id)"
                   )
-                .ui-card(
-                  v-if='taskMenuShow'
-                )
-                  .task-item__info
-                    .task-item__main-info
-                      span.ui-label Total Time: {{ task.time }}
-                    span.button-close(
-                      @click="deleteTask(task.id)"
-                    )
-                  .task-item__content
-                    .task-item__header
-                      .ui-checkbox-wrapper
-                        input.ui-checkbox(
-                          type="checkbox"
-                          v-model="task.completed"
-                          @click="taskCompleted(task.id, task.completed)"
-                        )
-                      span.ui-title-2 {{ task.title }}
-                    .task-item__body
-                      p.ui-text {{ task.description }}
-                    .task-item__foter
+                .task-item__content
+                  .task-item__header
+                    .ui-checkbox-wrapper
+                      input.ui-checkbox(
+                        type="checkbox"
+                        v-model="task.completed"
+                        @click="taskCompleted(task.id, task.completed, task.date, task.time)"
+                        v-if="!task.completed"
+                      )
+                      span(v-else) Done
+                    span.ui-title-2 {{ task.title }}
+                  .task-item__body
+                    p.ui-text {{ task.description }}
+                  .task-item__foter
 
-                      // Tags load
-                      .tag-list
-                        .ui-tag__wrapper(
-                          v-for="tag in task.tags"
-                          :key="tag.title"
+                    // Tags load
+                    .tag-list
+                      .ui-tag__wrapper(
+                        v-for="tag in task.tags"
+                        :key="tag.title"
+                      )
+                        .ui-tag
+                          span.tag-title {{ tag.title }}
+                    span(v-if='task.completed') Закончено:{{task.date}}
+                    span(v-else) Начато:{{task.date}}
+
+                      // Buttons
+                      .buttons-list
+                        .button.button--round.button-default(
+                          @click="taskEdit(task.id, task.title, task.description)"
+                        ) Edit
+                        .button.button--round.button--round-done(
+                          @click="taskCompleted(task.id, task.completed, task.date, task.time)"
                         )
-                          .ui-tag
-                            span.tag-title {{ tag.title }}
-                      span {{task.date}}
-                        // Buttons
-                        .buttons-list
-                          .button.button--round.button-default(
-                            @click="taskEdit(task.id, task.title, task.description)"
-                          ) Edit
-                          .button.button--round.button--round-done(
-                            @click="taskCompleted(task.id, task.completed)"
-                            :class="[{ 'button-primary': !task.completed }, { 'button-light': task.completed  }]"
-                          )
-                            span(v-if="task.completed") Return
-                            span.done(v-else) Done
+                          span(v-if="task.completed") 
+                          span.done(v-else) Done
 
     // Edit popup
     .ui-messageBox__wrapper(
@@ -117,16 +109,24 @@ export default {
       titleEditing: '',
       desrEditing: '',
       taskId: null,
-      taskMenuShow: false
+      taskMenuShow: false,
+      show: true
     }
   },
   methods: {
     // Completed
-    taskCompleted (id, completed) {
-      completed ? completed = false : completed = true
+    taskCompleted (id, completed, date, time) {
+      if(completed) {
+        completed = false
+      } else {
+        completed = true
+        date = this.nowTime()
+      }
       this.$store.dispatch('completedTask', {
         id,
-        completed
+        completed,
+        date,
+        time
       })
         .then(() => {
           console.log(completed)
@@ -167,9 +167,10 @@ export default {
           this.$store.dispatch('loadTasks')
         })
     },
-    taskShow () {
-      this.taskMenuShow = !this.taskMenuShow
-    },
+    nowTime () {
+      let date = new Date();
+      return date
+    }
   },
   computed: {
     // Filter buttons
@@ -204,16 +205,13 @@ export default {
 //
 // Task item
 //
+.ui-checkbox
+  &.disabled
+    display none
 .task-item
   margin-bottom 20px
   .ui-checkbox:checked:before
     border-color black
-  &.completed
-    .ui-title-2,
-    .ui-text-regular,
-    .ui-tag
-      text-decoration line-through
-      color black
   &:last-child
     margin-bottom 0
 .ui-tag__wrapper

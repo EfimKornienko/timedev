@@ -8,6 +8,7 @@ export default class Task {
     tags,
     completed,
     editing,
+    show,
     user = null,
     id = null
   ) {
@@ -18,6 +19,7 @@ export default class Task {
     this.tags = tags
     this.completed = completed
     this.editing = editing
+    this.show = show
     this.user = user
     this.id = id
   }

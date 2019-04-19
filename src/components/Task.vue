@@ -24,13 +24,29 @@
               :key="task.id"
               :class="{ completed: task.completed }"
             )
-              .ui-card            
+              .ui-card(
+                v-if='!task.show'
+              )    
+                .task-item__mini      
+                  .task-item__info
+                    .task-item__main-info
+                      span.ui-label Added: {{ task.date }}
+                    span.ui-title-2 {{ task.title }}
+                    span.button(
+                        @click="task.show = !task.show"
+                      )
+                      img(src='https://img.icons8.com/metro/26/000000/expand-arrow.png')
+              .ui-card(
+                v-else='task.show'
+                )            
                 .task-item__info
                   .task-item__main-info
                     span.ui-label Total Time: {{ task.time }}
-                  span.button-close(
-                    @click="deleteTask(task.id)"
-                  )
+                  .buttons-list
+                    span.button(
+                        @click="task.show = !task.show"
+                      )
+                      img(src="https://img.icons8.com/metro/26/000000/chevron-up.png")
                 .task-item__content
                   .task-item__header
                     .ui-checkbox-wrapper
@@ -59,14 +75,16 @@
 
                       // Buttons
                       .buttons-list
+                        .button.button--round.button-delete(
+                          @click="deleteTask(task.id)"
+                        ) Delete
                         .button.button--round.button-default(
                           @click="taskEdit(task.id, task.title, task.description)"
                         ) Edit
                         .button.button--round.button--round-done(
                           @click="taskCompleted(task.id, task.completed, task.date, task.time)"
-                        )
-                          span(v-if="task.completed") 
-                          span.done(v-else) Done
+                        ) 
+                          span.done Done
 
     // Edit popup
     .ui-messageBox__wrapper(
@@ -169,7 +187,15 @@ export default {
     },
     nowTime () {
       let date = new Date();
-      return date
+      let options = {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          weekday: 'long',
+          hour: 'numeric',
+          minute: 'numeric'
+        };
+      return date.toLocaleString(options)
     }
   },
   computed: {
@@ -193,8 +219,7 @@ export default {
 // Header buttons list
 //
 .ui-label
-  background-color  black 
-  color #fff
+  background-color  black
 .task-list__header
   display flex
   justify-content space-between
@@ -219,11 +244,12 @@ export default {
 // Info
 .task-item__info
   display flex
-  align-items center
   justify-content space-between
+  align-items center
   margin-bottom 20px
   .button-close
     width 20px
+    margin-right 0px 
     height @width
   .ui-label
     margin-right 8px
@@ -265,5 +291,9 @@ export default {
   font-size 20px
 .button--round-done
   background-color black
+.button-delete
+  background-color red
+.button-default
+  border-color black
 
 </style>

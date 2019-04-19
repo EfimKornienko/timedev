@@ -171,7 +171,8 @@ export default {
           date,
           tags: this.tagsUsed,
           completed: false,
-          editing: false
+          editing: false,
+          show: false
         }
         this.$store.dispatch('newTask', task)
           .then(() => {
@@ -212,7 +213,7 @@ export default {
           hour: 'numeric',
           minute: 'numeric'
         };
-      return date
+      return date.toLocaleString(options)
     }
   },
   computed: {

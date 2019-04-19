@@ -54,6 +54,7 @@ export default {
               t.tags,
               t.completed,
               t.editing,
+              t.show,
               t.user,
               key
             )
@@ -83,6 +84,7 @@ export default {
           payload.tags,
           payload.completed,
           payload.editing,
+          payload.show,
           getters.user.id
         )
         // Push newTask

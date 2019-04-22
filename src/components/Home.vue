@@ -64,26 +64,6 @@
                 )
                   span.tag-title {{ tag.title }}
                   span.button-close(@click="deleteTag(tag.id)")
-
-          // WHAT WE WATCH
-
-          // TOTAL TIME
-          .total-time
-            // Must Time
-            .total-time
-              span.time-title Minutes
-              input.time-input(
-                type="number"
-                v-model="minutes"
-              )
-              span.time-title Hours
-              input.time-input(
-                type="number"
-                v-model="hours"
-              )
-              // Show time
-              p {{spentTime}}
-              p {{nowTime()}}
           // SUBMIT
           .button-list
             button.button.button--round(
@@ -161,14 +141,16 @@ export default {
       // Valid
       } else {
         // Time (What Watch)
-        let time = this.spentTime
-        let date = this.nowTime()
+        let time = this.nowTime().getTime()
+        let beginDate = this.dateString()
+        let completeDate = ''
         // Task
         const task = {
           title: this.taskTitle,
           description: this.taskDescription,
           time,
-          date,
+          beginDate,
+          completeDate,
           tags: this.tagsUsed,
           completed: false,
           editing: false,
@@ -205,16 +187,21 @@ export default {
     },
     nowTime () {
       let date = new Date();
+      return date
+    },
+    dateString(date){
       let options = {
           year: 'numeric',
           month: 'long',
           day: 'numeric',
           weekday: 'long',
           hour: 'numeric',
-          minute: 'numeric'
+          minute: 'numeric',
+          second: 'numeric'
         };
-      return date.toLocaleString(options)
-    }
+        date = this.nowTime()
+      return date.toLocaleString("ru", options)
+    },
   },
   computed: {
     // Return all Tags

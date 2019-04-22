@@ -3,8 +3,6 @@
         section
             .container
                 .auth
-                    .auth__banner
-                        h1.ui-title-1 Hello Banner
                     .auth__form
                         span.ui-title-2 Registration
                         form(@submit.prevent="onSubmit")
@@ -126,9 +124,10 @@ export default {
 <style lang="stylus" scoped>
 .auth
     display  flex
-    .auth__banner,
     .auth__form
         width 50%
+        margin-left 25%
+        text-align center
 
 .form-item
     .error
@@ -141,6 +140,7 @@ export default {
             display block
 
 input
+    border-color black
     &.error 
         border-color #fc5c65
         animation shake .3s

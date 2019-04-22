@@ -26,22 +26,23 @@
             )
               .ui-card(
                 v-if='!task.show'
-              )    
-                .task-item__mini      
-                  .task-item__info
-                    .task-item__main-info
-                      span.ui-label Added: {{ task.date }}
-                    span.ui-title-2 {{ task.title }}
-                    span.button(
-                        @click="task.show = !task.show"
-                      )
-                      img(src='https://img.icons8.com/metro/26/000000/expand-arrow.png')
+              )         
+                .task-item__info
+                  .task-item__main-info
+                    span(v-if='task.completed').ui-title-4 Spent time {{ timeString(task.time) }}
+                    span(v-else).ui-title-4 Added: {{ task.beginDate }}
+                  span.ui-title-2 {{ task.title }}
+                  span.button(
+                      @click="task.show = !task.show"
+                    )
+                    img(src='https://img.icons8.com/metro/26/000000/expand-arrow.png')
               .ui-card(
                 v-else='task.show'
                 )            
                 .task-item__info
                   .task-item__main-info
-                    span.ui-label Total Time: {{ task.time }}
+                    span(v-if='task.completed').ui-title-4 Spent time: {{ timeString(task.time)}}
+                    span(v-else).ui-title-4 Added: {{ task.beginDate }}
                   .buttons-list
                     span.button(
                         @click="task.show = !task.show"
@@ -53,15 +54,13 @@
                       input.ui-checkbox(
                         type="checkbox"
                         v-model="task.completed"
-                        @click="taskCompleted(task.id, task.completed, task.date, task.time)"
+                        @click="taskCompleted(task.id, task.completed,task.completeDate, task.time)"
                         v-if="!task.completed"
                       )
-                      span(v-else) Done
                     span.ui-title-2 {{ task.title }}
                   .task-item__body
                     p.ui-text {{ task.description }}
                   .task-item__foter
-
                     // Tags load
                     .tag-list
                       .ui-tag__wrapper(
@@ -70,21 +69,23 @@
                       )
                         .ui-tag
                           span.tag-title {{ tag.title }}
-                    span(v-if='task.completed') Закончено:{{task.date}}
-                    span(v-else) Начато:{{task.date}}
+                    .time(v-if='task.completed')
+                      span Начато:{{task.beginDate}}
+                      span Закончено:{{task.completeDate}}
 
                       // Buttons
-                      .buttons-list
-                        .button.button--round.button-delete(
-                          @click="deleteTask(task.id)"
-                        ) Delete
-                        .button.button--round.button-default(
-                          @click="taskEdit(task.id, task.title, task.description)"
-                        ) Edit
-                        .button.button--round.button--round-done(
-                          @click="taskCompleted(task.id, task.completed, task.date, task.time)"
-                        ) 
-                          span.done Done
+                    .buttons-list
+                      .button.button--round.button-delete(
+                        @click="deleteTask(task.id)"
+                      ) Delete
+                      .button.button--round.button-default(
+                        @click="taskEdit(task.id, task.title, task.description)"
+                      ) Edit
+                      .button.button--round.button--round-done(
+                        v-if='!task.completed'
+                        @click="taskCompleted(task.id, task.completed,task.completeDate, task.time)"
+                      ) 
+                        span.done Done
 
     // Edit popup
     .ui-messageBox__wrapper(
@@ -133,17 +134,18 @@ export default {
   },
   methods: {
     // Completed
-    taskCompleted (id, completed, date, time) {
+    taskCompleted (id, completed,completeDate, time) {
       if(completed) {
         completed = false
       } else {
         completed = true
-        date = this.nowTime()
+        completeDate = this.dateString()
+        time = this.nowTime().getTime() - time
       }
       this.$store.dispatch('completedTask', {
         id,
         completed,
-        date,
+        completeDate,
         time
       })
         .then(() => {
@@ -187,15 +189,28 @@ export default {
     },
     nowTime () {
       let date = new Date();
+      return date
+    },
+    dateString(date){
       let options = {
           year: 'numeric',
           month: 'long',
           day: 'numeric',
           weekday: 'long',
           hour: 'numeric',
-          minute: 'numeric'
+          minute: 'numeric',
+          second: 'numeric'
         };
-      return date.toLocaleString(options)
+        date = this.nowTime()
+      return date.toLocaleString("ru", options)
+    },
+    timeString(time){
+      let options = {
+          minute: 'numeric',
+          second: 'numeric'
+        };
+      time = new Date(time)
+      return time.toLocaleString("ru", options)
     }
   },
   computed: {
@@ -296,4 +311,8 @@ export default {
 .button-default
   border-color black
 
+.time
+  span 
+    display flex
+    margin-top 10px
 </style>

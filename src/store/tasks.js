@@ -21,12 +21,12 @@ export default {
       task.title = title
       task.description = description
     },
-    completedTask (state, {id, completed, date, time}) {
+    completedTask (state, {id, completed, completeDate, time}) {
       const task = state.tasks.find(t => {
         return t.id === id
       })
       task.completed = completed
-      task.date = date
+      task.completeDate = completeDate
       task.time = time
     }
   },
@@ -50,7 +50,8 @@ export default {
               t.title,
               t.description,
               t.time,
-              t.date,
+              t.beginDate,
+              t.completeDate,
               t.tags,
               t.completed,
               t.editing,
@@ -80,7 +81,8 @@ export default {
           payload.title,
           payload.description,
           payload.time,
-          payload.date,
+          payload.beginDate,
+          payload.completeDate,
           payload.tags,
           payload.completed,
           payload.editing,
@@ -124,18 +126,18 @@ export default {
       }
     },
     // Change Completed
-    async completedTask ({commit}, {id, completed, date, time}) {
+    async completedTask ({commit}, {id, completed, completeDate, time}) {
       commit('clearError')
       commit('setLoading', true)
       try {
         // Update title & descr
         await firebase.database().ref('tasks').child(id).update({
           completed,
-          date,
+          completeDate,
           time
         })
         // Send mutation
-        commit('completedTask', {id, completed, date, time})
+        commit('completedTask', {id, completed, completeDate, time})
 
         commit('setLoading', false)
       } catch (error) {

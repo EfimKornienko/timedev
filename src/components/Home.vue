@@ -64,6 +64,7 @@
                 )
                   span.tag-title {{ tag.title }}
                   span.button-close(@click="deleteTag(tag.id)")
+          span {{typeof nowTime().getDate() }}
           // SUBMIT
           .button-list
             button.button.button--round(
@@ -142,7 +143,7 @@ export default {
       } else {
         // Time (What Watch)
         let time = this.nowTime().getTime()
-        let beginDate = this.dateString()
+        let beginDate = this.nowTime().getTime()
         let completeDate = ''
         // Task
         const task = {
@@ -151,6 +152,7 @@ export default {
           time,
           beginDate,
           completeDate,
+          sortDate: false,
           tags: this.tagsUsed,
           completed: false,
           editing: false,
@@ -169,7 +171,6 @@ export default {
         // Reset $v (validate)
         this.$v.$reset()
         // Reset for Tags
-        this.date=''
         this.tagMenuShow = false
         this.tagsUsed = []
         this.tagTitle = ''
@@ -188,19 +189,6 @@ export default {
     nowTime () {
       let date = new Date();
       return date
-    },
-    dateString(date){
-      let options = {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          weekday: 'long',
-          hour: 'numeric',
-          minute: 'numeric',
-          second: 'numeric'
-        };
-        date = this.nowTime()
-      return date.toLocaleString("ru", options)
     },
   },
   computed: {

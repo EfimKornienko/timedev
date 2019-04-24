@@ -6,6 +6,7 @@ export default class Task {
     time,
     beginDate,
     completeDate,
+    sortDate,
     tags,
     completed,
     editing,
@@ -18,6 +19,7 @@ export default class Task {
     this.time = time
     this.beginDate = beginDate
     this.completeDate = completeDate
+    this.sortDate = sortDate
     this.tags = tags
     this.completed = completed
     this.editing = editing

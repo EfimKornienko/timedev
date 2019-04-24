@@ -17,6 +17,13 @@
               @click="filter = 'all'"
             ) All
 
+        input.find-date--input(
+                type="text"
+                placeholder="How did you spend your time?"
+                v-model="dateTitle"
+              )
+        .button.button-default(
+              ) Send
         // Task load
         .task-list
             .task-item(
@@ -30,7 +37,7 @@
                 .task-item__info
                   .task-item__main-info
                     span(v-if='task.completed').ui-title-4 Spent time {{ timeString(task.time) }}
-                    span(v-else).ui-title-4 Added: {{ task.beginDate }}
+                    span(v-else).ui-title-4 Added: {{ dateString(task.beginDate) }}
                   span.ui-title-2 {{ task.title }}
                   span.button(
                       @click="task.show = !task.show"
@@ -42,7 +49,7 @@
                 .task-item__info
                   .task-item__main-info
                     span(v-if='task.completed').ui-title-4 Spent time: {{ timeString(task.time)}}
-                    span(v-else).ui-title-4 Added: {{ task.beginDate }}
+                    span(v-else).ui-title-4 Added: {{ dateString (task.beginDate) }}
                   .buttons-list
                     span.button(
                         @click="task.show = !task.show"
@@ -54,7 +61,7 @@
                       input.ui-checkbox(
                         type="checkbox"
                         v-model="task.completed"
-                        @click="taskCompleted(task.id, task.completed,task.completeDate, task.time)"
+                        @click="taskCompleted(task.id, task.completed, task.completeDate, task.beginDate, task.time)"
                         v-if="!task.completed"
                       )
                     span.ui-title-2 {{ task.title }}
@@ -70,8 +77,8 @@
                         .ui-tag
                           span.tag-title {{ tag.title }}
                     .time(v-if='task.completed')
-                      span Начато:{{task.beginDate}}
-                      span Закончено:{{task.completeDate}}
+                      span Начато:{{dateString (task.beginDate)}}
+                      span Закончено:{{dateString (task.completeDate)}}
 
                       // Buttons
                     .buttons-list
@@ -81,10 +88,10 @@
                       .button.button--round.button-default(
                         @click="taskEdit(task.id, task.title, task.description)"
                       ) Edit
-                      .button.button--round.button--round-done(
+                      .button.button--round.button-default(
                         v-if='!task.completed'
-                        @click="taskCompleted(task.id, task.completed,task.completeDate, task.time)"
-                      ) 
+                        @click="taskCompleted(task.id, task.completed,task.completeDate, task.beginDate, task.time)"
+                      )
                         span.done Done
 
     // Edit popup
@@ -129,24 +136,44 @@ export default {
       desrEditing: '',
       taskId: null,
       taskMenuShow: false,
-      show: true
+      show: true,
+      dateTitle: ''
     }
   },
   methods: {
     // Completed
-    taskCompleted (id, completed,completeDate, time) {
+    taskCompleted (id, completed, completeDate, beginDate, time) {
       if(completed) {
         completed = false
       } else {
         completed = true
-        completeDate = this.dateString()
-        time = this.nowTime().getTime() - time
+        completeDate = new Date(this.nowTime())
+        beginDate = new Date(beginDate)
+        time = this.nowTime() - time
       }
       this.$store.dispatch('completedTask', {
         id,
         completed,
         completeDate,
+        beginDate,
         time
+      })
+        .then(() => {
+          console.log(completed)
+        //  this.$store.dispatch('loadTasks')
+        })
+    },
+    taskDateFilter (id, completed, beginDate) {
+      if(completed) {
+        completed = false
+      } else {
+        beginDate = this.dateArray(beginDate)
+      }
+      this.$store.dispatch('taskFilterDate', {
+        id,
+        completed,
+        beginDate
+        
       })
         .then(() => {
           console.log(completed)
@@ -189,7 +216,7 @@ export default {
     },
     nowTime () {
       let date = new Date();
-      return date
+      return date.getTime()
     },
     dateString(date){
       let options = {
@@ -201,8 +228,11 @@ export default {
           minute: 'numeric',
           second: 'numeric'
         };
-        date = this.nowTime()
-      return date.toLocaleString("ru", options)
+        date = new Date(date)
+      return date.toLocaleString(options)
+    },
+    dateArray(dates) {
+    return dates =  this.dateString(dates).split('', 10)
     },
     timeString(time){
       let options = {
@@ -308,6 +338,8 @@ export default {
   background-color black
 .button-delete
   background-color red
+  margin-top 10px
+  margin-bottom 10px
 .button-default
   border-color black
 
@@ -315,4 +347,17 @@ export default {
   span 
     display flex
     margin-top 10px
+
+.find-date--input
+  width 25%
+  margin-top 10px
+  margin-bottom 10px
+  margin-right 10px
+  height 42px
+
+.button-default
+  margin-top 10px
+  margin-bottom 10px
+  background-color black 
+  color white
 </style>

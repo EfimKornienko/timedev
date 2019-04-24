@@ -21,13 +21,14 @@ export default {
       task.title = title
       task.description = description
     },
-    completedTask (state, {id, completed, completeDate, time}) {
+    completedTask (state, {id, completed, completeDate, beginDate, time}) {
       const task = state.tasks.find(t => {
         return t.id === id
       })
       task.completed = completed
       task.completeDate = completeDate
       task.time = time
+      task.beginDate = beginDate
     }
   },
   actions: {
@@ -52,6 +53,7 @@ export default {
               t.time,
               t.beginDate,
               t.completeDate,
+              t.sortDate,
               t.tags,
               t.completed,
               t.editing,
@@ -83,6 +85,7 @@ export default {
           payload.time,
           payload.beginDate,
           payload.completeDate,
+          payload.sortDate,
           payload.tags,
           payload.completed,
           payload.editing,
@@ -126,7 +129,7 @@ export default {
       }
     },
     // Change Completed
-    async completedTask ({commit}, {id, completed, completeDate, time}) {
+    async completedTask ({commit}, {id, completed, completeDate, beginDate, time}) {
       commit('clearError')
       commit('setLoading', true)
       try {
@@ -134,10 +137,32 @@ export default {
         await firebase.database().ref('tasks').child(id).update({
           completed,
           completeDate,
+          beginDate,
           time
         })
         // Send mutation
-        commit('completedTask', {id, completed, completeDate, time})
+        commit('completedTask', {id, completed, completeDate, beginDate, time})
+
+        commit('setLoading', false)
+      } catch (error) {
+        commit('setLoading', false)
+        commit('setError', error.message)
+        throw error
+      }
+    },
+    async taskFilterDate({commit}, {id, completed, completeDate, beginDate}){
+      commit('clearError')
+      commit('setLoading', true)
+      try {
+        // Update title & descr
+        await firebase.database().ref('tasks').child(id).update({
+          completed,
+          completeDate,
+          beginDate,
+          time
+        })
+        // Send mutation
+        commit('completedTask', {id, completed, beginDate})
 
         commit('setLoading', false)
       } catch (error) {

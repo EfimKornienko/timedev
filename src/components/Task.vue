@@ -16,14 +16,19 @@
             .button.button--round.button-default(
               @click="filter = 'all'"
             ) All
-
+            .button.button--round.button-default(
+              @click="filter = 'find'"
+            ) FindDate
         input.find-date--input(
-                type="text"
-                placeholder="How did you spend your time?"
-                v-model="dateTitle"
-              )
+          type="date"
+          placeholder="Choose date?"
+          v-model="this.inputDate"
+        )
         .button.button-default(
+              @click="taskDateFilter(this.task.id, this.task.completed, this.task.beginDate, this.task.sortDate, this.inputDate)"
               ) Send
+              span {{inputDateString(this.inputDate)}}
+
         // Task load
         .task-list
             .task-item(
@@ -79,6 +84,7 @@
                     .time(v-if='task.completed')
                       span Начато:{{dateString (task.beginDate)}}
                       span Закончено:{{dateString (task.completeDate)}}
+                      span {{dateArray(task.beginDate)}}
 
                       // Buttons
                     .buttons-list
@@ -137,7 +143,9 @@ export default {
       taskId: null,
       taskMenuShow: false,
       show: true,
-      dateTitle: ''
+      dateTitle: '',
+      inputDate: '',
+      findDate: false
     }
   },
   methods: {
@@ -163,17 +171,21 @@ export default {
         //  this.$store.dispatch('loadTasks')
         })
     },
-    taskDateFilter (id, completed, beginDate) {
+    taskDateFilter (id, completed, beginDate, sortDate, inputDate) {
       if(completed) {
-        completed = false
-      } else {
         beginDate = this.dateArray(beginDate)
+        inputDate = this.inputDateString(inputDate)
+
+        if(beginDate = inputDate) {
+          sortDate = true
+        }
+        console.log(sortDate)
+      } else {
+        sortDate = false
       }
       this.$store.dispatch('taskFilterDate', {
         id,
-        completed,
-        beginDate
-        
+        sortDate
       })
         .then(() => {
           console.log(completed)
@@ -234,6 +246,15 @@ export default {
     dateArray(dates) {
     return dates =  this.dateString(dates).split('', 10)
     },
+    inputDateString(inputDate){
+      inputDate =  this.dateString(inputDate).split('', 10)
+      for (let i = 2; i<= inputDate.length; i++ ){
+        if(inputDate[i] = '-'){
+          inputDate[i] = '.'
+        }
+        return inputDate
+      }
+    },
     timeString(time){
       let options = {
           minute: 'numeric',
@@ -252,6 +273,8 @@ export default {
         return this.$store.getters.taskCompleted
       } else if (this.filter === 'all') {
         return this.$store.getters.tasks
+      } else if (this.filter === 'find') {
+        return this.$store.getters.taskGetDateFilter
       }
       return this.filter === 'active'
     }

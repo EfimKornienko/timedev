@@ -29,6 +29,12 @@ export default {
       task.completeDate = completeDate
       task.time = time
       task.beginDate = beginDate
+    },
+    taskDateFilter (state, {id, sortDate}) {
+      const task = state.tasks.find(t => {
+        return t.id === id
+      })
+      task.sortDate = sortDate
     }
   },
   actions: {
@@ -150,19 +156,16 @@ export default {
         throw error
       }
     },
-    async taskFilterDate({commit}, {id, completed, completeDate, beginDate}){
+    async taskFilterDate ({commit}, {id, sortDate}) {
       commit('clearError')
       commit('setLoading', true)
       try {
         // Update title & descr
         await firebase.database().ref('tasks').child(id).update({
-          completed,
-          completeDate,
-          beginDate,
-          time
+          sortDate
         })
         // Send mutation
-        commit('completedTask', {id, completed, beginDate})
+        commit('taskDateFilter', {id, sortDate})
 
         commit('setLoading', false)
       } catch (error) {

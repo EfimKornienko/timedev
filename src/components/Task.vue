@@ -20,15 +20,13 @@
               @click="filter = 'find'"
             ) FindDate
         input.find-date--input(
-          type="date"
-          placeholder="Choose date?"
-          v-model="this.inputDate"
-        )
+                type="date"
+                placeholder="Choose date?"
+                v-model="inputDate"
+              )
         .button.button-default(
-              @click="taskDateFilter(this.task.id, this.task.completed, this.task.beginDate, this.task.sortDate, this.inputDate)"
+              @click="taskDateFilter(taskFindFilter(), inputDate)"
               ) Send
-              span {{inputDateString(this.inputDate)}}
-
         // Task load
         .task-list
             .task-item(
@@ -144,7 +142,7 @@ export default {
       taskMenuShow: false,
       show: true,
       dateTitle: '',
-      inputDate: '',
+      inputDate: [],
       findDate: false
     }
   },
@@ -171,26 +169,32 @@ export default {
         //  this.$store.dispatch('loadTasks')
         })
     },
-    taskDateFilter (id, completed, beginDate, sortDate, inputDate) {
-      if(completed) {
+    taskDateFilter (prop, inputDate) {
+      for(let i=0; i<prop.length;i++){
+        let id = prop[i].id
+        let beginDate = prop[i].beginDate
+        let sortDate = prop[i].sortDate
+        let completed = prop[i].completed
+        inputDate = this.inputArray(inputDate)
         beginDate = this.dateArray(beginDate)
-        inputDate = this.inputDateString(inputDate)
-
-        if(beginDate = inputDate) {
+        if(beginDate == inputDate) {
           sortDate = true
+        } else {
+          sortDate = false
         }
-        console.log(sortDate)
-      } else {
-        sortDate = false
-      }
-      this.$store.dispatch('taskFilterDate', {
-        id,
-        sortDate
-      })
-        .then(() => {
-          console.log(completed)
-        //  this.$store.dispatch('loadTasks')
+        this.$store.dispatch('taskFilterDate', {
+          id,
+          sortDate
         })
+          .then(() => {
+            console.log(sortDate,completed, id, beginDate, inputDate)
+          //  this.$store.dispatch('loadTasks')
+          })
+      }
+    },
+    taskFindFilter() {
+      let prop = this.$store.getters.tasks
+      return prop
     },
     // Edit
     taskEdit (id, title, description) {
@@ -244,16 +248,12 @@ export default {
       return date.toLocaleString(options)
     },
     dateArray(dates) {
-    return dates =  this.dateString(dates).split('', 10)
+    dates = dates.toString().split('/\s*-\s*/').toString().substr(0, 10)
+    return dates
     },
-    inputDateString(inputDate){
-      inputDate =  this.dateString(inputDate).split('', 10)
-      for (let i = 2; i<= inputDate.length; i++ ){
-        if(inputDate[i] = '-'){
-          inputDate[i] = '.'
-        }
-        return inputDate
-      }
+    inputArray(str) {
+    str = str.toString().split('/\s*-\s*/').toString()
+    return str
     },
     timeString(time){
       let options = {
@@ -274,7 +274,7 @@ export default {
       } else if (this.filter === 'all') {
         return this.$store.getters.tasks
       } else if (this.filter === 'find') {
-        return this.$store.getters.taskGetDateFilter
+        return this.$store.getters.taskFilter
       }
       return this.filter === 'active'
     }

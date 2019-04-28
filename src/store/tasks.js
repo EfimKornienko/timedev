@@ -207,6 +207,11 @@ export default {
       return getters.tasks.filter(task => {
         return task.completed === false
       })
+    },
+    taskFilter (state, getters) {
+      return getters.tasks.filter(task => {
+        return task.sortDate === true
+      })
     }
   }
 }

@@ -73,12 +73,9 @@
                   .task-item__foter
                     // Tags load
                     .tag-list
-                      .ui-tag__wrapper(
-                        v-for="tag in task.tags"
-                        :key="tag.title"
-                      )
+                      .ui-tag__wrapper
                         .ui-tag
-                          span.tag-title {{ tag.title }}
+                          span.tag-title {{ task.tagUsed }}
                     .time(v-if='task.completed')
                       span Начато:{{dateString (task.beginDate)}}
                       span Закончено:{{dateString (task.completeDate)}}
@@ -94,7 +91,7 @@
                       ) Edit
                       .button.button--round.button-default(
                         v-if='!task.completed'
-                        @click="taskCompleted(task.id, task.completed,task.completeDate, task.beginDate, task.time)"
+                        @click="taskCompleted(task.id, task.completed,task.completeDate, task.beginDate, task.time, task.tagUsed,task.title)"
                       )
                         span.done Done
 
@@ -148,15 +145,16 @@ export default {
   },
   methods: {
     // Completed
-    taskCompleted (id, completed, completeDate, beginDate, time) {
+    taskCompleted (id, completed, completeDate, beginDate, time,tagUsed,title) {
       if(completed) {
         completed = false
       } else {
         completed = true
-        completeDate = new Date(this.nowTime())
+        completeDate = this.nowTime()
         beginDate = new Date(beginDate)
         time = this.nowTime() - time
       }
+      this.$store.dispatch('')
       this.$store.dispatch('completedTask', {
         id,
         completed,
@@ -164,10 +162,18 @@ export default {
         beginDate,
         time
       })
+      this.$store.dispatch('newStat', {
+        title,
+        time,
+        completeDate,
+        tagUsed,
+        id
+      })
         .then(() => {
           console.log(completed)
         //  this.$store.dispatch('loadTasks')
         })
+        
     },
     taskDateFilter (prop, inputDate) {
       for(let i=0; i<prop.length;i++){

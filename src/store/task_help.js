@@ -7,7 +7,7 @@ export default class Task {
     beginDate,
     completeDate,
     sortDate,
-    tags,
+    tagUsed,
     completed,
     editing,
     show,
@@ -20,7 +20,7 @@ export default class Task {
     this.beginDate = beginDate
     this.completeDate = completeDate
     this.sortDate = sortDate
-    this.tags = tags
+    this.tagUsed = tagUsed
     this.completed = completed
     this.editing = editing
     this.show = show

@@ -6,6 +6,7 @@ import Home from '@/components/Home'
 import Task from '@/components/Task'
 import Login from '@/components/Auth/Login'
 import Registration from '@/components/Auth/Registration'
+import Statistics from '@/components/Statistics'
 
 Vue.use(Router)
 
@@ -24,6 +25,14 @@ export default new Router({
       path: '/task',
       name: 'task',
       component: Task,
+      beforeEnter (to, from, next) {
+        store.getters.checkUser ? next() : next('/login')
+      }
+    },
+    {
+      path: '/statistics',
+      name: 'statistics',
+      component: Statistics,
       beforeEnter (to, from, next) {
         store.getters.checkUser ? next() : next('/login')
       }

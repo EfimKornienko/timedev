@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
+import VueCharts from 'vue-chartjs'
 import UiMinu from 'uimini/dist/css/uimini.css'
 
 import App from './App'
@@ -15,7 +16,8 @@ import 'firebase/messaging'
 
 Vue.use(
   Vuelidate,
-  UiMinu
+  UiMinu,
+  VueCharts
 )
 Vue.config.productionTip = false
 
@@ -44,8 +46,7 @@ new Vue({
         this.$store.dispatch('loggedUser', user)
         // Loading All Tasks
         this.$store.dispatch('loadTasks')
-        // Loading All Tags
-        this.$store.dispatch('loadTags')
+        this.$store.dispatch('loadStat')
       }
     })
   }

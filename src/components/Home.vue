@@ -23,7 +23,7 @@
             )
           // TAG LIST
           // Add New Tag Button
-          .tag-list.tag-list--add
+          //.tag-list.tag-list--add
             .ui-tag__wrapper(
               @click="tagMenuShow = !tagMenuShow"
             )
@@ -34,7 +34,7 @@
                 )
 
           // Show Menu Input
-          transition(name="fade")
+          //transition(name="fade")
             .tag-list.tag-list--menu(
               v-if="tagMenuShow"
             )
@@ -56,15 +56,15 @@
             )
               .ui-tag__wrapper(
                 v-for="tag in tags"
-                :key="tag.id"
-              )
+                :key="tag.title"
+              ) 
+                //span.button-close(@click="deleteTag(tag.id)")
                 .button.ui-tag(
                   @click="addTagUsed(tag)"
                   :class="{used: tag.use}"
-                )
-                  span.tag-title {{ tag.title }}
-                  span.button-close(@click="deleteTag(tag.id)")
-          span {{typeof nowTime().getDate() }}
+                ) {{tag.title}}
+            span {{this.tagUsed}}
+          
           // SUBMIT
           .button-list
             button.button.button--round(
@@ -86,9 +86,16 @@ export default {
       hours: 0,
       minutes: 10,
       // Tags
-      tagTitle: '',
-      tagMenuShow: false,
-      tagsUsed: []
+      //tagTitle: '',
+      //tagMenuShow: false,
+      tagUsed: '', 
+      tags: [
+        {title: 'Job', use: false},
+        {title: 'Sleep', use: false},
+        {title: 'Fun', use: false},
+        {title: 'Other (With comment)', use: false},
+        {title: 'Eat', use: false},
+      ]
     }
   },
   // Vuelodate
@@ -99,37 +106,35 @@ export default {
   },
   methods: {
     // Add New Tag
-    newTag () {
-      // TODO: Vuelodate
-      if (this.tagTitle === '') {
-        return
-      }
-      const tag = {
-        title: this.tagTitle,
-        use: false
-      }
-      this.$store.dispatch('newTag', tag)
-      // Reset
-      this.tagTitle = ''
-    },
+    // newTag () {
+    //   if (this.tagTitle === '') {
+    //     return
+    //   }
+    //   const tag = {
+    //     title: this.tagTitle,
+    //     use: false
+    //   }
+    //   this.$store.dispatch('newTag', tag)
+    //   // Reset
+    //   this.tagTitle = ''
+    // },
     // Delete Tag
-    deleteTag (id) {
-      this.$store.dispatch('deleteTag', id)
-        .then(() => {
-          console.log('tag deleted')
-          this.$store.dispatch('loadTags')
-        })
-    },
+    // deleteTag (id) {
+    //   this.$store.dispatch('deleteTag', id)
+    //     .then(() => {
+    //       console.log('tag deleted')
+    //       this.$store.dispatch('loadTags')
+    //     })
+    // },
     // Add Used Tag
     addTagUsed (tag) {
+      for (let i = 0; i < this.tags.length; i++) {
+           if (this.tags[i].use = false) {
+             this.tags[i].use = false
+           }
+        }
       tag.use = !tag.use
-      if (tag.use) {
-        this.tagsUsed.push({
-          title: tag.title
-        })
-      } else {
-        this.tagsUsed.splice(tag.title, 1)
-      }
+      this.tagUsed=tag.title
     },
     // Submit NEW TASK (submit button)
     onSubmit () {
@@ -145,6 +150,7 @@ export default {
         let time = this.nowTime().getTime()
         let beginDate = this.nowTime().getTime()
         let completeDate = ''
+        let tagUsed = this.tagUsed
         // Task
         const task = {
           title: this.taskTitle,
@@ -153,7 +159,7 @@ export default {
           beginDate,
           completeDate,
           sortDate: false,
-          tags: this.tagsUsed,
+          tagUsed,
           completed: false,
           editing: false,
           show: false
@@ -171,9 +177,7 @@ export default {
         // Reset $v (validate)
         this.$v.$reset()
         // Reset for Tags
-        this.tagMenuShow = false
-        this.tagsUsed = []
-        this.tagTitle = ''
+        this.tagUsed = ''
         // Reset tags.use + class used
         for (let i = 0; i < this.tags.length; i++) {
           this.tags[i].use = false
@@ -192,10 +196,6 @@ export default {
     },
   },
   computed: {
-    // Return all Tags
-    tags () {
-      return this.$store.getters.tags
-    },
     // Total Time
     spentTime () {
       let min = (this.hours * 60) + (this.minutes * 1)
@@ -207,7 +207,6 @@ export default {
 
 <style lang="stylus" scoped>
 // Options
-//
 input,textarea,span
   border-color black
 .option-list

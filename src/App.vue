@@ -56,7 +56,8 @@ export default {
       if(this.checkUser){
         return [
           {title: 'Home', url: '/'},
-          {title: 'Tasks', url: '/task'}
+          {title: 'Tasks', url: '/task'},
+          {title: 'Statistics', url: '/statistics'}
           ]
         }
       return [
